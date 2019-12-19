@@ -17,12 +17,30 @@ namespace TicTakToe_
 
         public int CurrentPlayer => currentSymbol == "X" ? 1 : 0;
 
+        public delegate void GridEvent(string curPlayer);
+        public GridEvent GridClicked = delegate { };
+
+        private string CurrentPlayerStr
+        {
+            get
+            {
+                int thePlayer = CurrentPlayer == 1 ? 0 : 1;
+
+                if ((thePlayer == 1 && compPlayFirst) || (thePlayer == 0 && !compPlayFirst))
+                    return player1Name;
+                else return player2Name;
+            }
+        }
+
         private Random r = new Random();
 
         private int plays = 0;
         public bool compPlayFirst = true;
 
-        int lastPlayedGrid = -1;
+        private string player1Name = "Computer";
+        private string player2Name = "player";
+
+        private int lastPlayedGrid = -1;
 
         public GameGrid()
         {
@@ -31,6 +49,11 @@ namespace TicTakToe_
             //Initalize play grids
             InitalizeGrids();
             ClearGrid();
+        }
+
+        public void SetPlayerName(string name)
+        {
+            player2Name = name;
         }
 
         private void InitalizeGrids()
@@ -45,6 +68,19 @@ namespace TicTakToe_
             //Set all grid texts to empty
             foreach (Button gridItem in panel1.Controls)
                 gridItem.Text = "";
+        }
+
+        public void LockGrids(bool doLock)
+        {
+            grid1.Enabled = !doLock;
+            grid2.Enabled = !doLock;
+            grid3.Enabled = !doLock;
+            grid4.Enabled = !doLock;
+            grid5.Enabled = !doLock;
+            grid6.Enabled = !doLock;
+            grid7.Enabled = !doLock;
+            grid8.Enabled = !doLock;
+            grid9.Enabled = !doLock;
         }
 
         List<int> compPlayedGrids = new List<int>();
@@ -137,6 +173,26 @@ namespace TicTakToe_
             }
 
             
+        }
+
+        private bool Equ(string a, string b, string c)
+        {
+            return a == b && b == c && c != "";
+        }
+
+        public bool Won()
+        {
+            return Equ(grid1.Text, grid2.Text, grid3.Text)
+                || Equ(grid4.Text, grid5.Text, grid6.Text)
+                || Equ(grid7.Text, grid8.Text, grid9.Text)
+
+                || Equ(grid1.Text, grid4.Text, grid7.Text)
+                || Equ(grid2.Text, grid5.Text, grid8.Text)
+                || Equ(grid3.Text, grid6.Text, grid9.Text)
+
+                || Equ(grid1.Text, grid5.Text, grid9.Text)
+                || Equ(grid3.Text, grid5.Text, grid7.Text);
+
         }
 
         private int GetWinningGridIndex(string sym)
@@ -233,9 +289,11 @@ namespace TicTakToe_
 
         private void GameGridClick(object o, EventArgs e)
         {
+            GridClicked(CurrentPlayerStr);
+
             Button gridItem = (Button)o;
 
-            if (gridItem.Text != "") return;
+            if (gridItem.Text != "" || Won() || GetNextRandomPlayableGrid() == -1) return;
 
             gridItem.Text = currentSymbol;
 
@@ -248,6 +306,36 @@ namespace TicTakToe_
             {
                 CompPlay();
             }
+            
+
+            if (Won())
+            {
+                LockGrids(true);
+
+                string winner;
+                int theWinner = CurrentPlayer == 1 ? 0 : 1;
+
+                if (theWinner == 1 && compPlayFirst)
+                {
+                    winner = player1Name;
+                }
+                else if (theWinner == 0 && !compPlayFirst)
+                {
+                    winner = player1Name;
+                }
+                else
+                {
+                    winner = player2Name;
+                }
+
+                MessageBox.Show($"{winner} won!");
+            }
+            else if (GetNextRandomPlayableGrid() == -1)
+            {
+                LockGrids(true);
+                MessageBox.Show("Draw!");
+            }
+            
         }
 
     }
