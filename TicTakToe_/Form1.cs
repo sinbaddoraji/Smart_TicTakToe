@@ -19,7 +19,7 @@ namespace TicTakToe_
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            gameGrid1.CompPlay();
+            gameGrid1.StartGame(false);
             gameGrid1.GridClicked += GridClicked;
         }
 
