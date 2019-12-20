@@ -26,9 +26,14 @@ namespace TicTakToe_
         {
             Text = $"{curPlayer}'s turn";
 
-            if(gameGrid1.Won() || gameGrid1.Draw())
+            label1.Text = $"{gameGrid1.player1Name}:  {gameGrid1.player1Score}";
+            label2.Text = $"{gameGrid1.player2Name}:  {gameGrid1.player2Score}";
+            label4.Text = $"Draws:  {gameGrid1.draws}";
+
+            if (gameGrid1.Won() || gameGrid1.Draw())
             {
                 ExpandPanel();
+                button2.Text = "Start Game";
             }
         }
 
@@ -49,6 +54,8 @@ namespace TicTakToe_
             splitContainer1.SplitterDistance = 297;
             gameGrid1.Left = (splitContainer1.Panel2.Width - gameGrid1.Width) / 2;
             button1.Text = "<";
+            panel2.Show();
+            panel3.Show();
         }
 
         private void FoldPanel()
@@ -56,21 +63,25 @@ namespace TicTakToe_
             splitContainer1.SplitterDistance = 22;
             gameGrid1.Left = (splitContainer1.Panel2.Width - gameGrid1.Width) / 2;
             button1.Text = ">";
+            panel2.Hide();
+            panel3.Hide();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            if (button2.Text == "Restart")
-            {
+            if (radioButton1.Checked)
                 gameGrid1.StartGame(!checkBox1.Checked);
-                button2.Text = "Start Game";
-            }
-            else
-            {
-                gameGrid1.StartGame(!checkBox1.Checked);
-                button2.Text = "Restart";
-            }
-            
+            else gameGrid1.StartGame();
+
+            button2.Text = "Restart";
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBox1.Visible = radioButton1.Checked;
+
+            gameGrid1.player1Score = 0;
+            gameGrid1.player2Score = 0;
         }
     }
 }
