@@ -25,23 +25,37 @@ namespace TicTakToe_
         void GridClicked(string curPlayer)
         {
             Text = $"{curPlayer}'s turn";
+
+            if(gameGrid1.Won() || gameGrid1.Draw())
+            {
+                ExpandPanel();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //297
             if(panel1.Width == 297)
             {
-                splitContainer1.SplitterDistance = 22;
-                gameGrid1.Left = (splitContainer1.Panel2.Width - gameGrid1.Width) / 2;
-                button1.Text = ">";
+                FoldPanel();
             }
             else
             {
-                splitContainer1.SplitterDistance = 297;
-                gameGrid1.Left = (splitContainer1.Panel2.Width - gameGrid1.Width) / 2;
-                button1.Text = "<";
+                ExpandPanel();
             }
+        }
+
+        private void ExpandPanel()
+        {
+            splitContainer1.SplitterDistance = 297;
+            gameGrid1.Left = (splitContainer1.Panel2.Width - gameGrid1.Width) / 2;
+            button1.Text = "<";
+        }
+
+        private void FoldPanel()
+        {
+            splitContainer1.SplitterDistance = 22;
+            gameGrid1.Left = (splitContainer1.Panel2.Width - gameGrid1.Width) / 2;
+            button1.Text = ">";
         }
 
         private void button2_Click(object sender, EventArgs e)

@@ -170,6 +170,12 @@ namespace TicTakToe_
                 }
                 else
                 {
+                    playGridIndex = GetWinningGridIndex("X");
+                    if (playGridIndex != -1)
+                    {
+                        goto JustPlay;
+                    }
+
                     //Any random thing will do
                     playGridIndex = GetWinningGridIndex("O");
                     if (playGridIndex == -1)
@@ -194,6 +200,12 @@ namespace TicTakToe_
                 }
                 else if (compPlayedGrids.Count == 1)
                 {
+                    playGridIndex = GetWinningGridIndex("O");
+                    if (playGridIndex != -1)
+                    {
+                        goto JustPlay;
+                    }
+
                     playGridIndex = GetWinningGridIndex("X");
                     if (playGridIndex != -1)
                     {
@@ -209,6 +221,12 @@ namespace TicTakToe_
                 }
                 else
                 {
+                    playGridIndex = GetWinningGridIndex("O");
+                    if (playGridIndex != -1)
+                    {
+                        goto JustPlay;
+                    }
+
                     //Any random thing will do
                     playGridIndex = GetWinningGridIndex("X");
                     if (playGridIndex == -1)
@@ -247,6 +265,11 @@ namespace TicTakToe_
                 || Equ(grid1.Text, grid5.Text, grid9.Text)
                 || Equ(grid3.Text, grid5.Text, grid7.Text);
 
+        }
+
+        public bool Draw()
+        {
+            return GetNextRandomPlayableGrid() == -1;
         }
 
         private bool numSym(string a, string b, string c, string sym)
@@ -418,10 +441,7 @@ namespace TicTakToe_
             plays++;
 
             lastPlayedGrid = Convert.ToInt32(gridItem.Name.Trim("grid".ToCharArray()));
-            if (e != null)
-            {
-                CompPlay();
-            }
+           
             
 
             if (Won())
@@ -446,13 +466,20 @@ namespace TicTakToe_
                 }
 
                 MessageBox.Show($"{winner} won!");
+                return;
             }
             else if (GetNextRandomPlayableGrid() == -1)
             {
                 LockGrids(true);
                 MessageBox.Show("Draw!");
+                return;
             }
-            
+
+
+            if (e != null)
+            {
+                CompPlay();
+            }
         }
 
     }
