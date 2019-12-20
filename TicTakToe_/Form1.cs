@@ -19,7 +19,6 @@ namespace TicTakToe_
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            gameGrid1.StartGame(false);
             gameGrid1.GridClicked += GridClicked;
         }
 
@@ -43,6 +42,21 @@ namespace TicTakToe_
                 gameGrid1.Left = (splitContainer1.Panel2.Width - gameGrid1.Width) / 2;
                 button1.Text = "<";
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (button2.Text == "Restart")
+            {
+                gameGrid1.StartGame(!checkBox1.Checked);
+                button2.Text = "Start Game";
+            }
+            else
+            {
+                gameGrid1.StartGame(!checkBox1.Checked);
+                button2.Text = "Restart";
+            }
+            
         }
     }
 }

@@ -49,10 +49,17 @@ namespace TicTakToe_
             //Initalize play grids
             InitalizeGrids();
             ClearGrid();
+            LockGrids(true);
         }
+
 
         public void StartGame(bool pcPlayFirst)
         {
+            currentSymbol = "X";
+
+            ClearGrid();
+            LockGrids(false);
+
             compPlayFirst = pcPlayFirst;
             if (compPlayFirst)
                 CompPlay();
@@ -74,7 +81,10 @@ namespace TicTakToe_
         {
             //Set all grid texts to empty
             foreach (Button gridItem in panel1.Controls)
+            {
                 gridItem.Text = "";
+                gridItem.Image = null;
+            }
         }
 
         public void LockGrids(bool doLock)
@@ -368,6 +378,31 @@ namespace TicTakToe_
             return false; //False -> grod has been played on
         }
 
+        private void DrawWinningLine()
+        {
+            //Horizontal
+            if(Equ(grid1.Text, grid2.Text, grid3.Text))
+                grid1.Image = grid2.Image = grid3.Image = Properties.Resources.b;
+            else if (Equ(grid4.Text, grid5.Text, grid6.Text))
+                grid4.Image = grid5.Image = grid6.Image = Properties.Resources.b;
+            else if (Equ(grid7.Text, grid8.Text, grid9.Text))
+                grid7.Image = grid8.Image = grid9.Image = Properties.Resources.b;
+
+            //Vertical
+            else if (Equ(grid1.Text, grid4.Text, grid7.Text))
+                grid1.Image = grid4.Image = grid7.Image = Properties.Resources.c;
+            else if (Equ(grid2.Text, grid5.Text, grid8.Text))
+                grid2.Image = grid5.Image = grid8.Image = Properties.Resources.c;
+            else if (Equ(grid3.Text, grid6.Text, grid9.Text))
+                grid3.Image = grid6.Image = grid9.Image = Properties.Resources.c;
+
+            //Diagonal
+            else if (Equ(grid1.Text, grid5.Text, grid9.Text))
+                grid1.Image = grid5.Image = grid9.Image = Properties.Resources.v;
+            else if (Equ(grid3.Text, grid5.Text, grid7.Text))
+                grid3.Image = grid5.Image = grid7.Image = Properties.Resources.v;
+        }
+
         private void GameGridClick(object o, EventArgs e)
         {
             GridClicked(CurrentPlayerStr);
@@ -392,6 +427,7 @@ namespace TicTakToe_
             if (Won())
             {
                 LockGrids(true);
+                DrawWinningLine();
 
                 string winner;
                 int theWinner = CurrentPlayer == 1 ? 0 : 1;
